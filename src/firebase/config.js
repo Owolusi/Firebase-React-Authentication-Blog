@@ -1,5 +1,8 @@
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
+import {initializeApp} from "firebase/app"
+import {getFirestore} from 'firebase/firestore'
+import Dashboard from '../pages/dashboardPage/Dashboard';
 
 
 
@@ -14,7 +17,11 @@ const firebaseConfig = {
     appId: "1:930983470853:web:720ec9d3d3c9e7817e796c",
     measurementId: "G-3QEEDC8HM7"
   };
+
+  const app= initializeApp(firebaseConfig);
+
+
   firebase.initializeApp(firebaseConfig);
   const projectAuth=firebase.auth()
-
   export {projectAuth};
+  export const db=getFirestore(app);

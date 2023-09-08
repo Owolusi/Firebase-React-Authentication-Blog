@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 const Home = () => {
   return (
     <div>
-      {/*
       <header>
         <nav>
           <ul>
@@ -21,11 +20,12 @@ const Home = () => {
             </li>
           </ul>
         </nav>
-  </header>*/}
+  </header>
       <h1>
         Go to dashboard
       </h1>
       <Link to='/dashboard'>
+        <p>click below</p>
       <button>Dashboard</button>
       </Link>
     </div>
