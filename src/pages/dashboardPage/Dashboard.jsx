@@ -3,6 +3,7 @@ import './index.css'
 import userLogOut from '../../auth/userLogout/UserLogOut';
 import { useNavigate } from 'react-router-dom';
 import Blogs from '../../components/ListBlog/ListBlog'
+import AddBlog from '../../components/Addblog/AddBlog';
 
 
 const Dashboard = () => {
@@ -25,6 +26,7 @@ const Dashboard = () => {
       
       <button onClick={handleLogOut}>Log out</button>
       <Blogs />
+      <AddBlog />
       
       </div>
   )
