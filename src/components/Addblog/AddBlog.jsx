@@ -1,50 +1,7 @@
-{/*import { useState } from "react"
-import { addDoc, collection } from "firebase/firestore"
-import { db } from "../../firebase/config"
-import './index.css'
-
-
-function AddBlog() {
-    const {blog, setBlog}=useState('')
-
-    function handleSubmit(e){
-        e.preventDefault()
-        if(blog===''){
-            return
-        }
-        const blogsCollRef=collection(db, 'blogs')
-        addDoc(blogsCollRef, {blog:blog})
-        .then(response=>{
-            console.log(response)
-        })
-        .catch(error=>{
-            console.log(error.message)
-        })
-
-    }
-  return (
-    <div className="AddBlog-container">
-        <h2>AddBlog</h2>
-        <form onSubmit={handleSubmit}>
-            <label htmlFor="blog">blog name</label>
-            <input 
-            id='blog'
-            placeholder="write your blog"
-            type='text' 
-            value={blog}
-            onChange={e=> setBlog(e.target.value)}
-            />
-            <button type="submit">Add blog post</button>
-        </form>
-        </div>
-  )
-}
-
-export default AddBlog*/}
 
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, addDoc } from "firebase/firestore";
-import { db } from "../../firebase/config";
+import { collection, getDocs, addDoc, doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { db, projectAuth } from "../../firebase/config"; //my authentication context
 
 export default function ListBlogs() {
   const [blogs, setBlogs] = useState([]);
@@ -53,6 +10,9 @@ export default function ListBlogs() {
     Title: "",
     Body: "",
   });
+  const [editingBlog, setEditingBlog] = useState(null);
+
+  const user = projectAuth.currentUser; // dis targe current user
 
   useEffect(() => {
     getBlogs();
@@ -61,6 +21,7 @@ export default function ListBlogs() {
   useEffect(() => {
     console.log(blogs);
   }, [blogs]);
+
 
   function getBlogs() {
     const blogCollectionRef = collection(db, 'blogs');
@@ -78,21 +39,69 @@ export default function ListBlogs() {
 
   function handleAddBlog() {
     const blogsCollRef = collection(db, 'blogs');
-    addDoc(blogsCollRef, newBlog)
+    addDoc(blogsCollRef, { ...newBlog, userId: user.uid })
       .then(response => {
         console.log("Blog post added:", response);
-        // Clear the input fields after a successful submission
+
+        // Clearing my input fields after a successful submission
         setNewBlog({
           Author: "",
           Title: "",
           Body: "",
         });
-        // Refresh the blog list
+        // Refreshing the blog list
         getBlogs();
       })
       .catch(error => {
         console.error("Error adding blog post:", error.message);
       });
+  }
+
+  function handleEditClick(blog) {
+    setEditingBlog(blog);
+    setNewBlog(blog.data); // adding the existing data to form
+  }
+
+  function handleEditBlog() {
+    if (!editingBlog) return;
+
+    const blogDocRef = doc(db, "blogs", editingBlog.id);
+    if (editingBlog.data.userId === user.uid) {
+      updateDoc(blogDocRef, newBlog)
+        .then(() => {
+          console.log("Blog post edited successfully");
+          setEditingBlog(null);
+          setNewBlog({
+            Author: "",
+            Title: "",
+            Body: "",
+          });
+          getBlogs();
+        })
+        .catch(error => {
+          console.error("Error editing blog post:", error.message);
+        });
+    } else {
+      console.log("You don't have permission to edit this blog post.");
+    }
+  }
+
+  function handleDeleteBlog(blogId) {
+    const blogDocRef = doc(db, "blogs", blogId);
+    const blog = blogs.find(b => b.id === blogId);
+
+    if (blog.data.userId === user.uid) {
+      deleteDoc(blogDocRef)
+        .then(() => {
+          console.log("Blog post deleted successfully");
+          getBlogs();
+        })
+        .catch(error => {
+          console.error("Error deleting blog post:", error.message);
+        });
+    } else {
+      console.log("You don't have permission to delete this blog post.");
+    }
   }
 
   return (
@@ -105,10 +114,16 @@ export default function ListBlogs() {
           <h2>Written by: {blog.data.Author}</h2>
           <h3>Title: {blog.data.Title}</h3>
           <p>{blog.data.Body}</p>
+          {user && user.uid === blog.data.userId && (
+            <div>
+              <button onClick={() => handleEditClick(blog)}>Edit</button>
+              <button onClick={() => handleDeleteBlog(blog.id)}>Delete</button>
+            </div>
+          )}
         </div>
       ))}
 
-      <h2>Add a New Blog</h2>
+      <h2>Add/Edit Blog</h2>
       <form>
         <label htmlFor="author">Author</label>
         <input
@@ -133,10 +148,17 @@ export default function ListBlogs() {
           onChange={e => setNewBlog({ ...newBlog, Body: e.target.value })}
         />
 
-        <button type="button" onClick={handleAddBlog}>
-          Add Blog Post
-        </button>
+        {editingBlog ? (
+          <button type="button" onClick={handleEditBlog}>
+            Save Changes
+          </button>
+        ) : (
+          <button type="button" onClick={handleAddBlog}>
+            Add Blog Post
+          </button>
+        )}
       </form>
     </div>
   );
 }
+

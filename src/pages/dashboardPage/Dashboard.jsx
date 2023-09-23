@@ -22,7 +22,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h1>welcome to dashboard</h1>
+      <h1 className='fs-6'>welcome to dashboard</h1>
       
       <button onClick={handleLogOut}>Log out</button>
       <Blogs />
@@ -32,4 +32,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default Dashboard; 

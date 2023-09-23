@@ -68,6 +68,7 @@ useEffect(()=>{
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/config";
+import './ListBlog.css';
 
 export default function ListBlogs() {
   const [blogs, setBlogs] = useState([]);
@@ -96,14 +97,14 @@ export default function ListBlogs() {
 
   return (
     <div>
-      <h1>Latest Blogs</h1>
-      <button onClick={() => getBlogs()}>Refresh blog</button>
+      <h1 className="fs-4 custom-background">A complete tech Blog</h1> 
+      {/*<button onClick={() => getBlogs()}>Refresh blog</button>*/}
 
       {blogs.map(blog => (
         <div key={blog.id}>
-          <h2>Writing by: {blog.data.Author}</h2>
-          <h3>Title: {blog.data.Title}</h3>
+          <h5 className="fs-24 fw-9 text-middle">{/*Title*/}{blog.data.Title}</h5>
           <p>{blog.data.Body}</p>
+          <p className="fs-8 fw-12 text-start">By: {blog.data.Author}</p>
         </div>
       ))}
     </div>
