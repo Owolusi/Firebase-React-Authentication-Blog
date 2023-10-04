@@ -13,6 +13,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './pages/headerpage/NavbarComp'
 import Footer from './pages/footerPage/Footer'
 
+import Contact from './pages/Contactme/Contact'
+import { About } from './pages/About/About'
+
 
 
 import SignUp from "./components/signup_page/Signup";
@@ -24,12 +27,19 @@ function App() {
 
   return (
     <div>
+      <div>
       <Header />
       <Home />
+      </div>
 
 
         <Routes>
-        {/* PLUBLIC PAGES */}        
+        {/* PLUBLIC PAGES */}      
+
+        <Route path='/Contact' element={<Contact/>}/>
+        <Route path='About' element={<About/>}/>
+
+  
         
         <Route path='/SignUp' element={<SignUp/>}/>
         <Route path='/LogIn' element={<LogIn/>}/>

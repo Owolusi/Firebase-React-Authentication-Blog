@@ -1,4 +1,9 @@
 import React from "react"
+import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { About } from "../About/About";
+
+
 
 const Footer = () => <footer className="page-footer font-small blue pt-4">
     <div className="container-fluid text-center text-md-left">
@@ -17,9 +22,18 @@ const Footer = () => <footer className="page-footer font-small blue pt-4">
             <div className="col-md-3 mb-md-0 mb-3 custom-background">
                 <h5 className="text-uppercase">Links</h5>
                 <ul className="list-unstyled">
-                    <li><a href="#!">About</a></li>
+
+                    
+                    <li><a href="/About">About</a></li>
                     <li><a href="#!">Terms and Condition</a></li>
-                    <li><a href="#!">Contact Me</a></li>
+
+                    <Link to='/Contact' target="_blank"> <li>
+        <a href="/Contact" target="_blank" rel="noopener noreferrer">
+          Contact Me
+        </a>
+      </li>
+                    </Link>
+
                     <li><a href="#!">Link 4</a></li>
                 </ul>
             </div>
@@ -27,9 +41,9 @@ const Footer = () => <footer className="page-footer font-small blue pt-4">
             <div className="col-md-3 mb-md-0 mb-3 custom-background">
                 <h5 className="text-uppercase">Blogs</h5>
                 <ul className="list-unstyled">
-                    <li><a href="#!">Freelancing</a></li>
-                    <li><a href="#!">Starting Tech</a></li>
+                <li><a href="#!">Starting Tech</a></li>
                     <li><a href="#!">Building Portfolio Website</a></li>
+                    <li><a href="#!">Freelancing</a></li>
                     <li><a href="#!">Networking</a></li>
                 </ul>
             </div>
